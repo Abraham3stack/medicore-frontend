@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# 🏥 Medicore
 
-First, run the development server:
+Medicore is a full-stack healthcare appointment booking platform that allows patients to book appointments with doctors, while admins manage users and doctors manage their schedules.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🚀 Live Demo
+
+Frontend (Vercel): https://your-frontend-url.vercel.app  
+Backend (Render): https://your-backend-url.onrender.com
+
+---
+
+## ✨ Features
+
+### 👤 Authentication
+- Register & Login (JWT-based)
+- Auto login after registration
+- Role-based access (Admin, Doctor, Patient)
+
+### 🧑‍⚕️ Patient
+- Book appointments
+- View appointments
+- Responsive dashboard
+
+### 🩺 Doctor
+- View assigned appointments
+- Mark appointments as completed
+
+### 👑 Admin
+- View all appointments
+- Manage users
+- Promote users to Doctor/Admin
+
+### 📊 Dashboard
+- Real-time stats (Patients, Doctors, Appointments)
+- Animated counters
+- Auto-refresh every 10 seconds
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- Next.js (App Router)
+- Tailwind CSS
+- Axios / Fetch API
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT Authentication
+
+---
+
+## ⚙️ Environment Variables
+
+### Frontend (.env)
+```
+NEXT_PUBLIC_API_URL=https://your-backend-url.onrender.com
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend (.env)
+```
+PORT=5000
+MONGO_URI=your_mongodb_connection
+JWT_SECRET=your_secret_key
+NODE_ENV=production
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Installation
 
-## Learn More
+### 1. Clone the repo
+```
+git clone https://github.com/YOUR_USERNAME/medicore-frontend.git
+cd medicore-frontend
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Install dependencies
+```
+npm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Run locally
+```
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🔐 Important Notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- All users register as **patients by default**
+- Admin can promote users to doctors
+- Doctor profiles are auto-created when role changes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🧠 Future Improvements
+
+- Doctor profile editing
+- Search & filter users
+- Notifications (toast system)
+- Payment integration
+
+---
+
+## 👨‍💻 Author
+
+Abraham Ogbu  
+Full-stack Developer
+
+---
+
+## ⭐ If you like this project
+
+Give it a star on GitHub ⭐
