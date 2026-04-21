@@ -15,6 +15,32 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Medicore",
   description: "Smart Healthcare Management System",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Medicore",
+  },
+  openGraph: {
+    title: "Medicore",
+    description: "Book appointments with doctors easily",
+    url: "https://medicore-frontend-omega.vercel.app/",
+    siteName: "Medicore",
+    images: [
+      {
+        url: "/icon.png",
+        width: 512,
+        height: 512,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {

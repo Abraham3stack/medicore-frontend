@@ -7,8 +7,8 @@ Medicore is a full-stack healthcare appointment booking platform that allows pat
 
 ## 🚀 Live Demo
 
-Frontend (Vercel): https://your-frontend-url.vercel.app  
-Backend (Render): https://your-backend-url.onrender.com
+Frontend (Vercel): https://medicore-frontend-omega.vercel.app  
+Backend (Render): https://medicore-backend-91ei.onrender.com
 
 ---
 
