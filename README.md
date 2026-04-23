@@ -1,5 +1,4 @@
-
-# 🏥 Medicore
+# 🏥 Medicore Frontend
 
 Medicore is a full-stack healthcare appointment booking platform that allows patients to book appointments with doctors, while admins manage users and doctors manage their schedules.
 

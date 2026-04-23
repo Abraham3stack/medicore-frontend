@@ -9,6 +9,7 @@ import {
   FaFileMedical,
   FaShieldAlt,
   FaLock,
+  FaTachometerAlt,
 } from "react-icons/fa";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -27,6 +28,8 @@ export default function Home() {
   });
 
   const [loadingStats, setLoadingStats] = useState(true);
+
+  const [user, setUser] = useState(null);
 
   const router = useRouter();
 
@@ -86,6 +89,13 @@ useEffect(() => {
     return () => clearInterval(interval);
   }, [stats, loadingStats]);
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-surface">
       
@@ -101,19 +111,39 @@ useEffect(() => {
         </p>
 
         <div className="flex justify-center gap-4 flex-wrap">
-          <button
-            onClick={() => router.push("/register")}
-            className="bg-primary text-white px-8 py-4 rounded-xl shadow-lg hover:scale-105 transition"
-          >
-            Get Started
-          </button>
+          {user ? (
+            <button
+              onClick={() => {
+                if (user.role === "admin") router.push("/admin");
+                else if (user.role === "doctor") router.push("/doctor");
+                else router.push("/dashboard");
+              }}
+              className="bg-primary text-white px-8 py-4 rounded-xl shadow-lg hover:scale-105 hover:shadow-[0_0_20px_rgba(37,99,235,0.6)] transition flex items-center gap-2 group"
+            >
+              <FaTachometerAlt className="transition-transform duration-300 group-hover:translate-x-1 group-hover:scale-110" />
+              {user.role === "admin"
+                ? "Go to Admin Dashboard"
+                : user.role === "doctor"
+                ? "Go to Doctor Dashboard"
+                : "Go to Dashboard"}
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => router.push("/register")}
+                className="bg-primary text-white px-8 py-4 rounded-xl shadow-lg hover:scale-105 transition"
+              >
+                Get Started
+              </button>
 
-          <button
-            onClick={() => router.push("/login")}
-            className="border border-primary text-primary px-8 py-4 rounded-xl hover:bg-primary hover:text-white transition"
-          >
-            Login
-          </button>
+              <button
+                onClick={() => router.push("/login")}
+                className="border border-primary text-primary px-8 py-4 rounded-xl hover:bg-primary hover:text-white transition"
+              >
+                Login
+              </button>
+            </>
+          )}
         </div>
       </section>
 
@@ -201,6 +231,7 @@ useEffect(() => {
       </section>
 
       {/* CTA */}
+      {!user && (
       <section className="px-6 py-24 text-center">
         <h2 className="text-3xl font-bold text-textPrimary mb-4">
           Ready to transform healthcare management?
@@ -217,6 +248,7 @@ useEffect(() => {
           Create Account
         </button>
       </section>
+      )}
     </main>
   );
 }

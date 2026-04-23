@@ -10,6 +10,13 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
+
+  const baseBtn = "px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200";
+  const ghostBtn = `${baseBtn} border-transparent text-textPrimary hover:bg-primary/10 hover:text-primary`;
+  const activeBtn = `${baseBtn} border-primary text-primary bg-primary/10 font-semibold`;
+  const primaryBtn = "px-4 py-2 rounded-full bg-primary text-white text-sm font-semibold shadow-sm hover:scale-105 transition";
+  const dangerBtn = "px-4 py-2 rounded-full bg-danger text-white text-sm font-semibold shadow-sm hover:scale-105 transition";
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       // ignore clicks on the toggle button
@@ -94,34 +101,18 @@ export default function Navbar() {
 
       {/* Nav Links (Right side) */}
       <div className="hidden md:flex items-center gap-4">
-        {pathname === "/" ? (
+        {!user ? (
           <>
             <button
               onClick={() => router.push("/login")}
-              className="text-textPrimary hover:text-primary"
+              className={ghostBtn}
             >
               Login
             </button>
 
             <button
               onClick={() => router.push("/register")}
-              className="bg-primary text-white px-4 py-2 rounded-lg"
-            >
-              Register
-            </button>
-          </>
-        ) : !user ? (
-          <>
-            <button
-              onClick={() => router.push("/login")}
-              className="text-textPrimary hover:text-primary"
-            >
-              Login
-            </button>
-
-            <button
-              onClick={() => router.push("/register")}
-              className="bg-primary text-white px-4 py-2 rounded-lg"
+              className={primaryBtn}
             >
               Register
             </button>
@@ -129,7 +120,7 @@ export default function Navbar() {
         ) : (
           <>
             <span className="text-sm text-textSecondary capitalize">
-              {user.role}
+              {user.firstName}
             </span>
 
             <button
@@ -138,7 +129,11 @@ export default function Navbar() {
                 else if (user.role === "doctor") router.push("/doctor");
                 else router.push("/dashboard");
               }}
-              className="text-textPrimary hover:text-primary"
+              className={
+                pathname === "/admin" || pathname === "/doctor" || pathname === "/dashboard"
+                  ? activeBtn
+                  : ghostBtn
+              }
             >
               Dashboard
             </button>
@@ -146,7 +141,11 @@ export default function Navbar() {
             {user.role === "admin" && (
               <button
                 onClick={() => router.push("/admin/users")}
-                className="text-textPrimary hover:text-primary"
+                className={
+                  pathname.startsWith("/admin/users")
+                    ? activeBtn
+                    : ghostBtn
+                }
               >
                 Users
               </button>
@@ -155,7 +154,11 @@ export default function Navbar() {
             {user.role === "patient" && (
               <button
                 onClick={() => router.push("/appointments")}
-                className="text-textPrimary hover:text-primary"
+                className={
+                  pathname.startsWith("/appointments")
+                    ? activeBtn
+                    : ghostBtn
+                }
               >
                 Appointments
               </button>
@@ -163,7 +166,7 @@ export default function Navbar() {
 
             <button
               onClick={handleLogout}
-              className="bg-danger text-white px-4 py-2 rounded-lg"
+              className={dangerBtn}
             >
               Logout
             </button>
@@ -176,32 +179,17 @@ export default function Navbar() {
           open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-3 pointer-events-none"
         }`}
       >
-        {pathname === "/" ? (
+        {!user ? (
           <>
             <button
               onClick={() => { setOpen(false); router.push("/login"); }}
-              className="text-left text-textPrimary"
+              className={`${ghostBtn} text-left w-full`}
             >
               Login
             </button>
             <button
               onClick={() => { setOpen(false); router.push("/register"); }}
-              className="text-left bg-primary text-white px-4 py-2 rounded-lg"
-            >
-              Register
-            </button>
-          </>
-        ) : !user ? (
-          <>
-            <button
-              onClick={() => { setOpen(false); router.push("/login"); }}
-              className="text-left text-textPrimary"
-            >
-              Login
-            </button>
-            <button
-              onClick={() => { setOpen(false); router.push("/register"); }}
-              className="text-left bg-primary text-white px-4 py-2 rounded-lg"
+              className={`${primaryBtn} text-left w-full`}
             >
               Register
             </button>
@@ -209,7 +197,7 @@ export default function Navbar() {
         ) : (
           <>
             <span className="text-sm text-textSecondary capitalize">
-              {user.role}
+              {user.firstName}
             </span>
             <button
               onClick={() => {
@@ -218,7 +206,11 @@ export default function Navbar() {
                 else if (user.role === "doctor") router.push("/doctor");
                 else router.push("/dashboard");
               }}
-              className="text-left text-textPrimary"
+              className={`text-left w-full hover:text-primary ${
+                pathname === "/admin" || pathname === "/doctor" || pathname === "/dashboard"
+                  ? activeBtn
+                  : ghostBtn
+              }`}
             >
               Dashboard
             </button>
@@ -228,7 +220,11 @@ export default function Navbar() {
                   setOpen(false);
                   router.push("/admin/users");
                 }}
-                className="text-left text-textPrimary"
+                className={`text-left w-full hover:text-primary ${
+                  pathname.startsWith("/admin/users")
+                    ? activeBtn
+                    : ghostBtn
+                }`}
               >
                 Users
               </button>
@@ -239,14 +235,18 @@ export default function Navbar() {
                   setOpen(false);
                   router.push("/appointments");
                 }}
-                className="text-left text-textPrimary"
+                className={`text-left w-full hover:text-primary ${
+                  pathname.startsWith("/appointments")
+                    ? activeBtn
+                    : ghostBtn
+                }`}
               >
                 Appointments
               </button>
             )}
             <button
               onClick={() => { setOpen(false); handleLogout(); }}
-              className="text-left bg-danger text-white px-4 py-2 rounded-lg"
+              className={`${dangerBtn} text-left w-full`}
             >
               Logout
             </button>
