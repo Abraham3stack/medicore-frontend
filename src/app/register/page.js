@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaHeartbeat, FaHospital, FaPills, FaStethoscope } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { registerUser } from "@/services/auth.service";
 
@@ -74,12 +74,40 @@ export default function Register() {
   return (
     <main className="min-h-screen flex">
       {/* LEFT SIDE */}
-      <div className="hidden md:flex w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 items-center justify-center p-10">
-        <div className="text-white max-w-md">
-          <h2 className="text-4xl font-bold mb-4">Join Medicore</h2>
-          <p className="text-blue-100">
-            Create your account and start managing your healthcare appointments with ease.
-          </p>
+      <div className="hidden md:flex w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 items-center justify-center p-10 relative overflow-hidden">
+        {/* Glow blobs */}
+        <div className="absolute w-72 h-72 bg-blue-400 opacity-20 rounded-full blur-3xl top-10 left-10 animate-float-slow"></div>
+        <div className="absolute w-72 h-72 bg-white opacity-10 rounded-full blur-3xl bottom-10 right-10 animate-float"></div>
+
+        {/* Floating icons */}
+        <div className="absolute top-20 left-20 text-white opacity-70 animate-float text-2xl">
+          <FaPills />
+        </div>
+        <div className="absolute bottom-32 left-16 text-white opacity-60 animate-float-slow text-2xl">
+          <FaStethoscope />
+        </div>
+        <div className="absolute top-32 right-20 text-white opacity-70 animate-float text-2xl">
+          <FaHeartbeat />
+        </div>
+        <div className="absolute bottom-20 right-24 text-white opacity-60 animate-float-slow text-2xl">
+          <FaHospital />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center text-center max-w-md gap-8">
+          <div>
+            <h2 className="text-4xl font-bold mb-4">Join Medicore Today</h2>
+            <p className="text-blue-100">
+              Create your account and start managing your healthcare appointments with ease.
+            </p>
+          </div>
+
+          {/* Illustration */}
+          <img
+            src="/register-illustration.svg"
+            alt="Register illustration"
+            className="w-[80%] max-w-sm opacity-90 transition-transform duration-300 hover:scale-105 hover:rotate-1"
+          />
         </div>
       </div>
 
