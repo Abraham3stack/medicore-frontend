@@ -65,14 +65,21 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="relative w-full sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b px-6 py-4 flex justify-between items-center">
+    <nav className="relative w-full sticky top-0 z-50 bg-gradient-to-r from-blue-50/80 to-white/80 backdrop-blur-md border-b border-blue-100 px-6 py-4 flex justify-between items-center">
       {/* Logo */}
-      <h1
+      <div
         onClick={() => router.push("/")}
-        className="text-xl font-bold text-primary cursor-pointer"
+        className="group flex items-center gap-2 cursor-pointer transition"
       >
-        Medicore
-      </h1>
+        <img
+          src="/icon.png"
+          alt="Medicore Logo"
+          className="w-8 h-8 object-contain transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105"
+        />
+        <h1 className="text-xl font-bold text-primary transition-transform duration-300 group-hover:translate-x-1">
+          Medicore
+        </h1>
+      </div>
 
       <button
         onClick={(e) => {
@@ -103,6 +110,30 @@ export default function Navbar() {
       <div className="hidden md:flex items-center gap-4">
         {!user ? (
           <>
+            <button
+              onClick={() => {
+                if (pathname !== "/") router.push("/#features");
+                else document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className={ghostBtn}
+            >
+              Features
+            </button>
+            <button
+              onClick={() => {
+                if (pathname !== "/") router.push("/#stats");
+                else {
+                  const el = document.getElementById("stats");
+                  if (el) {
+                    const y = el.getBoundingClientRect().top + window.pageYOffset - 80; // offset for navbar
+                    window.scrollTo({ top: y, behavior: "smooth" });
+                  }
+                }
+              }}
+              className={ghostBtn}
+            >
+              Stats
+            </button>
             <button
               onClick={() => router.push("/login")}
               className={ghostBtn}
@@ -181,6 +212,32 @@ export default function Navbar() {
       >
         {!user ? (
           <>
+            <button
+              onClick={() => {
+                setOpen(false);
+                if (pathname !== "/") router.push("/#features");
+                else document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className={`${ghostBtn} text-left w-full`}
+            >
+              Features
+            </button>
+            <button
+              onClick={() => {
+                setOpen(false);
+                if (pathname !== "/") router.push("/#stats");
+                else {
+                  const el = document.getElementById("stats");
+                  if (el) {
+                    const y = el.getBoundingClientRect().top + window.pageYOffset - 80; // offset for navbar
+                    window.scrollTo({ top: y, behavior: "smooth" });
+                  }
+                }
+              }}
+              className={`${ghostBtn} text-left w-full`}
+            >
+              Stats
+            </button>
             <button
               onClick={() => { setOpen(false); router.push("/login"); }}
               className={`${ghostBtn} text-left w-full`}

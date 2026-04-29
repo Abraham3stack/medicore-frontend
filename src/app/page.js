@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FaUserInjured,
   FaUserMd,
@@ -33,34 +33,58 @@ export default function Home() {
 
   const router = useRouter();
 
-useEffect(() => {
-  const fetchStats = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/users/stats`);
-      const result = await res.json();
+  const heroRef = useRef(null);
+  const imgRef = useRef(null);
 
-      const data = result.data || {
-        totalPatients: 0,
-        totalDoctors: 0,
-        totalAppointments: 0,
-      };
+  useEffect(() => {
+    const elements = heroRef.current?.querySelectorAll(".reveal");
+    if (!elements) return;
 
-      setStats(data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoadingStats(false);
-    }
-  };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("opacity-100", "translate-y-0");
+            entry.target.classList.remove("opacity-0", "translate-y-5");
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
 
-  // Initial fetch
-  fetchStats();
+    elements.forEach((el) => observer.observe(el));
 
-  // Auto refresh every 10 seconds
-  const interval = setInterval(fetchStats, 10000);
+    return () => observer.disconnect();
+  }, []);
 
-  return () => clearInterval(interval);
-}, []);
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/users/stats`);
+        const result = await res.json();
+
+        const data = result.data || {
+          totalPatients: 0,
+          totalDoctors: 0,
+          totalAppointments: 0,
+        };
+
+        setStats(data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoadingStats(false);
+      }
+    };
+
+    // Initial fetch
+    fetchStats();
+
+    // Auto refresh every 10 seconds
+    const interval = setInterval(fetchStats, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (loadingStats) return;
@@ -100,13 +124,19 @@ useEffect(() => {
     <main className="min-h-screen bg-gradient-to-b from-background to-surface">
       
       {/* HERO */}
-      <section className="px-6 py-24 text-center max-w-6xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-primary mb-6 leading-tight">
-          Smart Healthcare <br className="hidden md:block" />
-          Management System
+      <section ref={heroRef} className="px-6 py-24 text-center max-w-6xl mx-auto relative mb-10 overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/5 via-transparent to-blue-100/10 blur-2xl"></div>
+        <div className="reveal opacity-0 translate-y-5 transition-all duration-700 inline-block mb-4 px-4 py-1 text-sm rounded-full bg-primary/10 text-primary font-medium">
+          Trusted Healthcare Platform
+        </div>
+        <h1 className="reveal opacity-0 translate-y-5 transition-all duration-700 text-3xl sm:text-4xl md:text-6xl font-bold mb-6 leading-tight break-words">
+          <span className="whitespace-nowrap bg-gradient-to-r from-purple-700 via-purple-500 to-purple-900 bg-clip-text text-transparent">
+            Smart Healthcare
+          </span>
+          <span className="block text-primary">Management System</span>
         </h1>
 
-        <p className="text-textSecondary text-lg md:text-xl max-w-2xl mx-auto mb-10">
+        <p className="reveal opacity-0 translate-y-5 transition-all duration-700 text-textSecondary/90 text-lg md:text-xl max-w-2xl mx-auto mb-10">
           Manage patients, doctors, appointments, and medical records seamlessly, all in one powerful platform.
         </p>
 
@@ -118,7 +148,7 @@ useEffect(() => {
                 else if (user.role === "doctor") router.push("/doctor");
                 else router.push("/dashboard");
               }}
-              className="bg-primary text-white px-8 py-4 rounded-xl shadow-lg hover:scale-105 hover:shadow-[0_0_20px_rgba(37,99,235,0.6)] transition flex items-center gap-2 group"
+              className="bg-primary text-white px-8 py-4 rounded-xl shadow-lg hover:scale-105 hover:shadow-[0_0_25px_rgba(37,99,235,0.4)] transition-all duration-300 flex items-center gap-2 group"
             >
               <FaTachometerAlt className="transition-transform duration-300 group-hover:translate-x-1 group-hover:scale-110" />
               {user.role === "admin"
@@ -131,7 +161,7 @@ useEffect(() => {
             <>
               <button
                 onClick={() => router.push("/register")}
-                className="bg-primary text-white px-8 py-4 rounded-xl shadow-lg hover:scale-105 transition"
+                className="bg-primary text-white px-8 py-4 rounded-xl shadow-lg hover:scale-105 hover:shadow-[0_0_25px_rgba(37,99,235,0.4)] transition-all duration-300"
               >
                 Get Started
               </button>
@@ -145,36 +175,70 @@ useEffect(() => {
             </>
           )}
         </div>
+        <div className="mt-16 flex justify-center relative">
+          <div className="absolute w-[500px] h-[500px] bg-blue-400/20 blur-3xl rounded-full -z-10"></div>
+          <img
+            ref={imgRef}
+            onMouseMove={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const x = (e.clientX - rect.left - rect.width / 2) / 25;
+              const y = (e.clientY - rect.top - rect.height / 2) / 25;
+              e.currentTarget.style.transform = `translate(${x}px, ${y}px)`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translate(0,0)";
+            }}
+            src="/dashboard-preview.png"
+            alt="Dashboard Preview"
+            className="w-full max-w-4xl rounded-2xl shadow-xl border transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_60px_rgba(37,99,235,0.25)]"
+          />
+        </div>
       </section>
 
       {/* STATS */}
-      <section className="px-6 pb-16">
+      <section id="stats" className="px-6 pb-16">
+        <h2 className="text-3xl font-bold text-center text-textPrimary mb-10">
+          Our Impact
+        </h2>
+
+        <p className="text-textSecondary text-center max-w-2xl mx-auto mb-12">
+          Real numbers that show how MediCore is improving healthcare management.
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <div className="bg-surface p-6 rounded-xl shadow text-center">
-            <h3 className="text-3xl font-bold text-primary">
-              {loadingStats ? "..." : `${animatedStats.totalPatients}+`}
-            </h3>
-            <p className="text-textSecondary text-sm mt-2">Registered Patients</p>
+          <div className="bg-surface p-6 rounded-xl shadow text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl relative overflow-hidden group">
+            <div className="absolute inset-0 bg-blue-400/0 group-hover:bg-blue-400/10 blur-2xl transition-all duration-500"></div>
+            <div className="relative z-10">
+              <h3 className="text-4xl font-extrabold text-primary tracking-tight">
+                {loadingStats ? "..." : `${animatedStats.totalPatients}+`}
+              </h3>
+              <p className="text-textSecondary text-sm mt-2">Registered Patients</p>
+            </div>
           </div>
 
-          <div className="bg-surface p-6 rounded-xl shadow text-center">
-            <h3 className="text-3xl font-bold text-green-600">
-              {loadingStats ? "..." : `${animatedStats.totalDoctors}+`}
-            </h3>
-            <p className="text-textSecondary text-sm mt-2">Expert Doctors</p>
+          <div className="bg-surface p-6 rounded-xl shadow text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl relative overflow-hidden group">
+            <div className="absolute inset-0 bg-blue-400/0 group-hover:bg-blue-400/10 blur-2xl transition-all duration-500"></div>
+            <div className="relative z-10">
+              <h3 className="text-4xl font-extrabold text-green-600 tracking-tight">
+                {loadingStats ? "..." : `${animatedStats.totalDoctors}+`}
+              </h3>
+              <p className="text-textSecondary text-sm mt-2">Expert Doctors</p>
+            </div>
           </div>
 
-          <div className="bg-surface p-6 rounded-xl shadow text-center">
-            <h3 className="text-3xl font-bold text-purple-600">
-              {loadingStats ? "..." : `${animatedStats.totalAppointments}+`}
-            </h3>
-            <p className="text-textSecondary text-sm mt-2">Appointments Booked</p>
+          <div className="bg-surface p-6 rounded-xl shadow text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl relative overflow-hidden group">
+            <div className="absolute inset-0 bg-blue-400/0 group-hover:bg-blue-400/10 blur-2xl transition-all duration-500"></div>
+            <div className="relative z-10">
+              <h3 className="text-4xl font-extrabold text-purple-600 tracking-tight">
+                {loadingStats ? "..." : `${animatedStats.totalAppointments}+`}
+              </h3>
+              <p className="text-textSecondary text-sm mt-2">Appointments Booked</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* FEATURES */}
-      <section className="px-6 py-20 bg-surface">
+      <section id="features" className="px-6 py-20 bg-surface">
         <h2 className="text-3xl font-bold text-center text-textPrimary mb-14">
           Powerful Features
         </h2>
@@ -214,17 +278,18 @@ useEffect(() => {
 ].map((item, i) => (
   <div
     key={i}
-    className="p-6 rounded-2xl shadow-md hover:shadow-xl transition border border-gray-100 hover:-translate-y-1"
+    className="p-6 rounded-2xl shadow-md border border-gray-100 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group hover:shadow-xl"
   >
-    <div className="mb-4">{item.icon}</div>
-
-    <h3 className="font-semibold text-lg mb-2 text-primary">
-      {item.title}
-    </h3>
-
-    <p className="text-textSecondary text-sm">
-      {item.desc}
-    </p>
+    <div className="absolute inset-0 bg-blue-400/0 group-hover:bg-blue-400/10 blur-2xl transition-all duration-500"></div>
+    <div className="relative z-10">
+      <div className="mb-4">{item.icon}</div>
+      <h3 className="font-semibold text-lg mb-2 text-primary">
+        {item.title}
+      </h3>
+      <p className="text-textSecondary text-sm">
+        {item.desc}
+      </p>
+    </div>
   </div>
 ))}
         </div>
@@ -249,6 +314,7 @@ useEffect(() => {
         </button>
       </section>
       )}
+
     </main>
   );
 }
